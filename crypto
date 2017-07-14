@@ -1,0 +1,46 @@
+#!/usr/bin/env python3
+
+import click
+from cryptography.fernet import Fernet
+
+
+@click.group()
+def crypto():
+    """Tools for encryption"""
+    pass
+
+
+@crypto.command()
+def keygen():
+    """Generate encrypt key."""
+    print(Fernet.generate_key().decode('utf-8'))
+
+
+@crypto.command()
+@click.argument('file', type=click.Path(exists=True))
+@click.option('--key', help='Encrypt key')
+def encrypt(file, key):
+    """Encrypt the specified file."""
+    fernet = Fernet(key)
+
+    with open(file, 'rb') as f:
+        encrypted = fernet.encrypt(f.read())
+    with open(file + '.encrypted', 'wb') as f:
+        f.write(encrypted)
+
+
+@crypto.command()
+@click.argument('file', type=click.Path(exists=True))
+@click.option('--key', help='Encrypt key')
+def decrypt(file, key):
+    """Decrypt the specified file."""
+    fernet = Fernet(key)
+
+    with open(file, 'rb') as f:
+        decrypted = fernet.decrypt(f.read())
+    with open(file.rsplit('.encrypted', maxsplit=1)[0], 'wb') as f:
+        f.write(decrypted)
+
+
+if __name__ == '__main__':
+    crypto()
