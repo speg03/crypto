@@ -2,6 +2,14 @@
 
 CLI tool to encrypt/decrypt the specified file.
 
+## Requirements
+
+* Python 3.x
+
+```
+$ pip install -r requirements.txt
+```
+
 ## Generate encrypt key
 
 ```
